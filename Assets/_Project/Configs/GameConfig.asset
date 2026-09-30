@@ -20,6 +20,7 @@ MonoBehaviour:
   maxItemsPerCustomer: 2
   stockerBaseHireCost: 120
   stockerHireCostGrowth: 1.8
+  baseStockers: 1
   stockersPerLevel: 0.5
   stockerCarryAmount: 4
   offlineCapSeconds: 7200

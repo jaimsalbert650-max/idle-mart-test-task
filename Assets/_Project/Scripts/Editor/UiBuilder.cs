@@ -472,16 +472,17 @@ namespace IdleMart.EditorTools
             staff.rectTransform.Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-24f, -140f), new Vector2(540f, 0f));
             Column(staff.gameObject, 14f, 26);
             FitHeight(staff.gameObject);
-            var staffTitle = Label(staff.transform, "Title", "Staff", 40f, Gold, TextAlignmentOptions.Left, true);
+            var staffTitle = Label(staff.transform, "Title", "Staff & Marketing", 40f, Gold, TextAlignmentOptions.Left, true);
             staffTitle.gameObject.AddComponent<LayoutElement>().preferredHeight = 54f;
             var staffBody = Label(staff.transform, "Body", "Body", 26f, TextColor);
             staffBody.enableWordWrapping = true;
             var hire = ((GameObject)PrefabUtility.InstantiatePrefab(optionPrefab.gameObject, staff.transform)).GetComponent<OptionButton>();
+            var campaign = ((GameObject)PrefabUtility.InstantiatePrefab(optionPrefab.gameObject, staff.transform)).GetComponent<OptionButton>();
             var staffClose = TextButton(staff.transform, "Close", "X", Warning, new Vector2(56f, 56f), 30f);
             staffClose.GetComponent<LayoutElement>().ignoreLayout = true;
             ((RectTransform)staffClose.transform).Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-16f, -16f), new Vector2(56f, 56f));
             var staffPanel = staff.gameObject.AddComponent<StaffPanel>();
-            staffPanel.EditorSetup(staff.gameObject, staffBody, hire, staffClose);
+            staffPanel.EditorSetup(staff.gameObject, staffBody, hire, campaign, staffClose);
 
             // Toast (top-center) and hint (bottom-center).
             var toastBox = Box(canvas.transform, "Toast", new Color(0.1f, 0.1f, 0.14f, 0.92f));

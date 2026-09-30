@@ -17,17 +17,37 @@ namespace IdleMart.AI
         private Store _store;
         private float _timer = 1f;
 
+        public const float CampaignDuration = 60f;
+        public const float CampaignMultiplier = 2f;
+
         public int ActiveCount => _active.Count;
+
+        /// <summary>Seconds left of the running ad campaign (0 = none).</summary>
+        public float CampaignRemaining { get; private set; }
+
+        /// <summary>Ad campaigns get more expensive as the store grows.</summary>
+        public long CampaignCost => (long)(80 * Mathf.Pow(_services.Progress.Level, 1.6f));
 
         public float CustomersPerMinute
         {
             get
             {
                 var config = _services.Config;
-                return config.baseCustomersPerMinute
-                       + config.customersPerMinutePerLevel * (_services.Progress.Level - 1)
-                       + _store.ExtraCustomersPerMinute;
+                var rate = config.baseCustomersPerMinute
+                           + config.customersPerMinutePerLevel * (_services.Progress.Level - 1)
+                           + _store.ExtraCustomersPerMinute;
+                return CampaignRemaining > 0f ? rate * CampaignMultiplier : rate;
             }
+        }
+
+        /// <summary>Pays for an ad campaign that doubles customer flow for a minute.</summary>
+        public bool TryStartCampaign()
+        {
+            if (CampaignRemaining > 0f || !_services.Wallet.TrySpend(CampaignCost)) return false;
+
+            CampaignRemaining = CampaignDuration;
+            _timer = 0f;
+            return true;
         }
 
         public void Init(GameServices services, Store store)
@@ -39,6 +59,8 @@ namespace IdleMart.AI
         private void Update()
         {
             if (_services == null) return;
+
+            if (CampaignRemaining > 0f) CampaignRemaining = Mathf.Max(0f, CampaignRemaining - Time.deltaTime);
 
             _timer -= Time.deltaTime;
             if (_timer > 0f) return;
