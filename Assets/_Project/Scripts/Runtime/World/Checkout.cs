@@ -16,6 +16,8 @@ namespace IdleMart.World
         [Tooltip("Shown above the register when a customer waits and there is no cashier.")]
         [SerializeField] private GameObject needsServiceMarker;
         [SerializeField] private float queueSpacing = 0.6f;
+        [Tooltip("Longest allowed queue; keeps the line inside the aisle.")]
+        [SerializeField] private int maxQueueLength = 5;
 
         private readonly List<CustomerAI> _queue = new List<CustomerAI>();
         private CharacterAnimator _cashier;
@@ -23,6 +25,7 @@ namespace IdleMart.World
 
         public bool HasCashier => _cashier != null;
         public int QueueLength => _queue.Count;
+        public bool IsQueueFull => _queue.Count >= maxQueueLength;
         public float ServiceTime => Config.ServiceTimeAt(Level);
         public long CashierHireCost => Config.cashierHireCost;
 
@@ -37,11 +40,18 @@ namespace IdleMart.World
 
         public Quaternion QueueRotation => counterPoint.rotation;
 
-        public void Join(CustomerAI customer) => _queue.Add(customer);
+        public void Join(CustomerAI customer)
+        {
+            _queue.Add(customer);
+            RaiseChanged();
+        }
 
         public int IndexOf(CustomerAI customer) => _queue.IndexOf(customer);
 
-        public void Leave(CustomerAI customer) => _queue.Remove(customer);
+        public void Leave(CustomerAI customer)
+        {
+            if (_queue.Remove(customer)) RaiseChanged();
+        }
 
         public bool TryHireCashier()
         {
@@ -90,10 +100,11 @@ namespace IdleMart.World
 
             var (money, xp) = customer.Pay();
             Services.RegisterSale(money, xp);
-            _cashier?.PlayInteract();
+            if (_cashier != null) _cashier.PlayInteract();
             Settings.AudioService.Play(Settings.Sfx.Coin);
-            WorldFx.Instance?.FloatingText(transform.position + Vector3.up * 1.1f, $"+${money}", new Color(1f, 0.85f, 0.2f));
+            WorldFx.ShowText(transform.position + Vector3.up * 1.1f, $"+${money}", new Color(1f, 0.85f, 0.2f));
             RefreshMarker();
+            RaiseChanged();
         }
 
         private void SpawnCashier()

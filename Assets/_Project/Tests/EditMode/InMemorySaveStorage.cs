@@ -9,6 +9,8 @@ namespace IdleMart.Tests
         public bool Exists => Content != null;
         public string Read() => Content;
         public void Write(string content) => Content = content;
+        public string BackupContent;
         public void Delete() => Content = null;
+        public void Backup() => BackupContent = Content;
     }
 }

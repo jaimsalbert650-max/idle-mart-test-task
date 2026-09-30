@@ -32,5 +32,10 @@ namespace IdleMart.Save
         {
             if (File.Exists(_path)) File.Delete(_path);
         }
+
+        public void Backup()
+        {
+            if (File.Exists(_path)) File.Copy(_path, _path + ".bak", overwrite: true);
+        }
     }
 }

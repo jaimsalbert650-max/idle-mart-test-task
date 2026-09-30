@@ -16,7 +16,7 @@ namespace IdleMart.AI
         public CharacterAnimator Animator => characterAnimator;
 
         public bool HasArrived =>
-            !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance + 0.05f;
+            !_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance + 0.25f;
 
         private void Awake()
         {

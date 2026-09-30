@@ -52,7 +52,6 @@ namespace IdleMart.Core
         private IEnumerator LoadRoutine(string sceneName)
         {
             _loading = true;
-            Time.timeScale = 1f;
             screen.blocksRaycasts = true;
             progressFill.fillAmount = 0f;
             yield return Fade(1f, 0.2f);
@@ -73,6 +72,8 @@ namespace IdleMart.Core
             progressFill.fillAmount = 1f;
             operation.allowSceneActivation = true;
             yield return operation;
+            // Unpause only after the old scene is gone, so a paused game does not keep earning after saving.
+            Time.timeScale = 1f;
 
             yield return Fade(0f, 0.3f);
             screen.blocksRaycasts = false;

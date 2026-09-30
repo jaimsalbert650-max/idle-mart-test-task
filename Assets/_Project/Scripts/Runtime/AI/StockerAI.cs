@@ -41,8 +41,25 @@ namespace IdleMart.AI
             _state = State.Idle;
         }
 
+        private const float StuckTimeout = 12f;
+        private float _walkTimer;
+
         private void Update()
         {
+            // Safety net: if the path is blocked (e.g. by customers) give the job up instead of freezing forever.
+            if (_state is State.ToStorage or State.ToShelf)
+            {
+                _walkTimer += Time.deltaTime;
+                if (_walkTimer > StuckTimeout)
+                {
+                    if (_shelf != null) _shelf.ReservedByStocker = false;
+                    _shelf = null;
+                    SetCarrying(false);
+                    _state = State.Idle;
+                }
+            }
+            else _walkTimer = 0f;
+
             switch (_state)
             {
                 case State.Idle:

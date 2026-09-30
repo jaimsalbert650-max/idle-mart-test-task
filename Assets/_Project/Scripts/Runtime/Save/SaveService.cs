@@ -46,9 +46,27 @@ namespace IdleMart.Save
 
             // Future migrations: if (data.version < 2) { ...; data.version = 2; }
 
+            Sanitize(data);
+            return data;
+        }
+
+        /// <summary>Clamps values a hand-edited or damaged file could break the game with.</summary>
+        private static void Sanitize(SaveData data)
+        {
             data.built ??= new List<BuiltObjectData>();
             data.unlockedZones ??= new List<string>();
-            return data;
+            data.built.RemoveAll(b => b == null || string.IsNullOrEmpty(b.slotId) || string.IsNullOrEmpty(b.buildableId));
+            data.money = Math.Max(0, data.money);
+            data.xp = Math.Max(0, data.xp);
+            data.stockers = Math.Max(0, data.stockers);
+            if (double.IsNaN(data.incomePerSecond) || data.incomePerSecond < 0) data.incomePerSecond = 0;
+            foreach (var b in data.built) b.level = Math.Max(1, b.level);
+        }
+
+        /// <summary>Keeps a copy of an unusable save so a failed restore never destroys the player's progress.</summary>
+        public void Backup()
+        {
+            if (_storage.Exists) _storage.Backup();
         }
 
         public void Delete() => _storage.Delete();

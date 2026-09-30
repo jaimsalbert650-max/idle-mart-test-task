@@ -28,5 +28,7 @@ namespace IdleMart.Save
         public string buildableId;
         public int level;
         public bool hasCashier;
+        /// <summary>Items on a shelf; -1 means "full" (also the default for older saves).</summary>
+        public int stock = -1;
     }
 }

@@ -35,6 +35,13 @@ namespace IdleMart.World
             RefreshBar();
         }
 
+        /// <summary>Restores stock from a save (-1 = full).</summary>
+        public void RestoreStock(int stock)
+        {
+            Stock = stock < 0 ? Capacity : Mathf.Clamp(stock, 0, Capacity);
+            RefreshBar();
+        }
+
         /// <summary>Takes one item for a customer.</summary>
         public bool TryTakeItem()
         {
@@ -61,7 +68,7 @@ namespace IdleMart.World
         public override void OnClicked()
         {
             var added = Restock(Missing);
-            if (added > 0) WorldFx.Instance?.FloatingText(transform.position + Vector3.up * 1.2f, $"+{added} {Product.displayName}", Product.color);
+            if (added > 0) WorldFx.ShowText(transform.position + Vector3.up * 1.2f, $"+{added} {Product.displayName}", Product.color);
         }
 
         private void RefreshBar()

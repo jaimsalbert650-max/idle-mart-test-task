@@ -46,7 +46,7 @@ namespace IdleMart.Core
 
         private void Awake()
         {
-            Services = new GameServices(config, new SystemClock());
+            Services = new GameServices(config, new UnityClock());
             _saveService = new SaveService(new FileSaveStorage(SavePath));
 
             store.Init(Services);
@@ -57,7 +57,20 @@ namespace IdleMart.Core
             StartNewGame = false;
 
             var data = _saveService.Load();
-            if (data != null) Restore(data);
+            if (data == null) return;
+
+            try
+            {
+                Restore(data);
+            }
+            catch (Exception e)
+            {
+                // Keep the player's file and start clean rather than autosaving a half-restored store over it.
+                Debug.LogError($"Could not restore the save, it was kept as save.json.bak. {e}");
+                _saveService.Backup();
+                StartNewGame = true;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(gameObject.scene.name);
+            }
         }
 
         private void Update()
@@ -111,7 +124,7 @@ namespace IdleMart.Core
             Services.Wallet.Set(data.money);
             Services.Progress.SetXp(data.xp);
             store.RestoreFrom(data);
-            staffService.Restore(data.stockers);
+            staffService.Restore(Math.Min(data.stockers, staffService.MaxStockers));
             _loadedIncomeRate = data.incomePerSecond;
 
             var elapsed = Services.Clock.UtcUnixSeconds - data.savedAtUnix;

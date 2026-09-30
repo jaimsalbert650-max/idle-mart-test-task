@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using IdleMart.Configs;
 using IdleMart.World;
 using UnityEngine;
@@ -43,7 +44,9 @@ namespace IdleMart.AI
 
         /// <summary>True when this customer stands at the front of the queue, ready to pay.</summary>
         public bool IsWaitingAtCounter =>
-            _state == State.InQueue && _checkout != null && _checkout.IndexOf(this) == 0 && _motor.HasArrived;
+            _state == State.InQueue && _checkout != null && _checkout.IndexOf(this) == 0 &&
+            // Distance check, not only HasArrived: right after a queue shift the agent may still report its old arrival.
+            (transform.position - _checkout.QueuePosition(0)).sqrMagnitude < 0.3f * 0.3f;
 
         private void Awake() => _motor = GetComponent<CharacterMotor>();
 
@@ -167,6 +170,14 @@ namespace IdleMart.AI
             _checkout = _store.FindBestCheckout();
             if (_checkout == null)
             {
+                if (_store.Checkouts.Any())
+                {
+                    // Every queue is full: wait a moment and try again (the lifetime limit still applies).
+                    if (UnityEngine.Random.value < 0.3f) Complain("Long queue...");
+                    EnterDeciding(1.5f);
+                    return;
+                }
+
                 Complain("No checkout?!");
                 Leave();
                 return;
@@ -175,6 +186,7 @@ namespace IdleMart.AI
             _checkout.Join(this);
             _queueTarget = Vector3.positiveInfinity;
             _state = State.InQueue;
+            UpdateQueuePosition();
         }
 
         private void UpdateQueuePosition()
@@ -194,7 +206,7 @@ namespace IdleMart.AI
         private void Complain(string text)
         {
             _motor.Animator.PlayNo();
-            WorldFx.Instance?.Bubble(transform, text);
+            WorldFx.ShowBubble(transform, text);
         }
 
         private void Leave()

@@ -1,5 +1,5 @@
-using System.IO;
 using IdleMart.Core;
+using IdleMart.Save;
 using IdleMart.Settings;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +23,8 @@ namespace IdleMart.UI
         private void Start()
         {
             Time.timeScale = 1f;
-            var hasSave = File.Exists(GameBootstrap.SavePath);
+            // Validate the save instead of only checking the file, so a broken save never shows "Continue".
+            var hasSave = new SaveService(new FileSaveStorage(GameBootstrap.SavePath)).Load() != null;
             continueButton.interactable = hasSave;
             confirmPanel.SetActive(false);
 

@@ -61,15 +61,28 @@ namespace IdleMart.UI
             EnsureRunner();
             var id = owner.GetInstanceID();
             if (Running.TryGetValue(id, out var existing) && existing != null) _runner.StopCoroutine(existing);
-            Running[id] = _runner.StartCoroutine(Routine(id, duration, step, onComplete));
+            Running[id] = _runner.StartCoroutine(Routine(owner, id, duration, step, onComplete));
         }
 
-        private static IEnumerator Routine(int id, float duration, Action<float> step, Action onComplete)
+        private static IEnumerator Routine(GameObject owner, int id, float duration, Action<float> step, Action onComplete)
         {
             for (var t = 0f; t < duration; t += Time.unscaledDeltaTime)
             {
+                // The runner survives scene loads; stop if the animated object was destroyed with its scene.
+                if (owner == null)
+                {
+                    Running.Remove(id);
+                    yield break;
+                }
+
                 step(t / duration);
                 yield return null;
+            }
+
+            if (owner == null)
+            {
+                Running.Remove(id);
+                yield break;
             }
 
             step(1f);
@@ -86,7 +99,7 @@ namespace IdleMart.UI
         private static void EnsureRunner()
         {
             if (_runner != null) return;
-            var go = new GameObject("[UiTween]") { hideFlags = HideFlags.HideAndDontSave };
+            var go = new GameObject("[UiTween]") { hideFlags = HideFlags.HideInHierarchy };
             UnityEngine.Object.DontDestroyOnLoad(go);
             _runner = go.AddComponent<Runner>();
         }

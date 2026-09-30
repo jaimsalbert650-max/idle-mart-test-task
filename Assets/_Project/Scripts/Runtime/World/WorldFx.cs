@@ -18,6 +18,23 @@ namespace IdleMart.World
 
         public static WorldFx Instance { get; private set; }
 
+        // Safe static entry points: gameplay code can fire effects without caring whether FX exist
+        // (explicit Unity null check instead of ?. which bypasses destroyed-object detection).
+        public static void ShowText(Vector3 position, string text, Color color)
+        {
+            if (Instance != null) Instance.FloatingText(position, text, color);
+        }
+
+        public static void ShowBubble(Transform target, string text)
+        {
+            if (Instance != null) Instance.Bubble(target, text);
+        }
+
+        public static void ShowPuff(Vector3 position)
+        {
+            if (Instance != null) Instance.Puff(position);
+        }
+
         private void Awake()
         {
             Instance = this;

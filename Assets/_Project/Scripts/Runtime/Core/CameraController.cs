@@ -51,6 +51,8 @@ namespace IdleMart.Core
 
         private void Update()
         {
+            if (Time.timeScale == 0f) return; // Paused.
+
             var mouse = Mouse.current;
             var keyboard = Keyboard.current;
 

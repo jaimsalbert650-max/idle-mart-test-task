@@ -188,7 +188,7 @@ namespace IdleMart.UI
                     if (built.TryUpgrade())
                     {
                         AudioService.Play(Sfx.Build);
-                        WorldFx.Instance?.Puff(built.transform.position);
+                        WorldFx.ShowPuff(built.transform.position);
                     }
                     else Fail("Not enough money");
                 });

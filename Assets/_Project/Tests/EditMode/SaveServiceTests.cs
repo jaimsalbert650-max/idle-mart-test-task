@@ -61,6 +61,36 @@ namespace IdleMart.Tests
         }
 
         [Test]
+        public void Load_ClampsInvalidValues()
+        {
+            _storage.Content = "{\"version\":1,\"money\":-50,\"xp\":-3,\"stockers\":-1,\"built\":[{\"slotId\":\"a\",\"buildableId\":\"b\",\"level\":0},{\"slotId\":\"\",\"buildableId\":\"x\"}]}";
+            var loaded = _service.Load();
+            Assert.AreEqual(0, loaded.money);
+            Assert.AreEqual(0, loaded.xp);
+            Assert.AreEqual(0, loaded.stockers);
+            Assert.AreEqual(1, loaded.built.Count);
+            Assert.AreEqual(1, loaded.built[0].level);
+        }
+
+        [Test]
+        public void ShelfStock_RoundTrips_AndDefaultsToFull()
+        {
+            var data = new SaveData();
+            data.built.Add(new BuiltObjectData { slotId = "s", buildableId = "b", level = 1, stock = 3 });
+            _service.Save(data);
+            Assert.AreEqual(3, _service.Load().built[0].stock);
+            Assert.AreEqual(-1, new BuiltObjectData().stock);
+        }
+
+        [Test]
+        public void Backup_CopiesCurrentSave()
+        {
+            _service.Save(new SaveData { money = 7 });
+            _service.Backup();
+            StringAssert.Contains("\"money\":7", _storage.BackupContent);
+        }
+
+        [Test]
         public void Load_MissingLists_AreNeverNull()
         {
             _storage.Content = "{\"version\":1,\"money\":5}";

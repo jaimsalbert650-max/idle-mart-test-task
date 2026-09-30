@@ -12,12 +12,14 @@ namespace IdleMart.Economy
         private readonly IClock _clock;
         private readonly double _windowSeconds;
         private readonly Queue<(double time, long amount)> _records = new Queue<(double, long)>();
+        private readonly double _startTime;
         private long _sum;
 
         public IncomeTracker(IClock clock, double windowSeconds = 60)
         {
             _clock = clock;
             _windowSeconds = windowSeconds;
+            _startTime = clock.Now;
         }
 
         public double PerSecond
@@ -25,7 +27,9 @@ namespace IdleMart.Economy
             get
             {
                 Prune();
-                return _sum / _windowSeconds;
+                // Early in a session the window is not full yet: divide by the time actually tracked.
+                var span = System.Math.Min(_windowSeconds, System.Math.Max(1.0, _clock.Now - _startTime));
+                return _sum / span;
             }
         }
 

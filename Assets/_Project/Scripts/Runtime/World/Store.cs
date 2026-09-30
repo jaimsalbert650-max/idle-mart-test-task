@@ -70,7 +70,7 @@ namespace IdleMart.World
 
             _services.Wallet.TrySpend(config.buildCost);
             slot.Place(config, 1);
-            WorldFx.Instance?.Puff(slot.transform.position);
+            WorldFx.ShowPuff(slot.transform.position);
             _services.NotifyStoreChanged();
             return PurchaseResult.Ok;
         }
@@ -90,7 +90,7 @@ namespace IdleMart.World
 
             _services.Wallet.TrySpend(zone.Config.cost);
             zone.SetUnlocked(true);
-            WorldFx.Instance?.Puff(zone.transform.position);
+            WorldFx.ShowPuff(zone.transform.position);
             _services.NotifyStoreChanged();
             return PurchaseResult.Ok;
         }
@@ -109,9 +109,9 @@ namespace IdleMart.World
                 .OrderBy(s => (s.StandPosition - from).sqrMagnitude)
                 .FirstOrDefault();
 
-        /// <summary>Checkout with the shortest queue; staffed checkouts win ties.</summary>
+        /// <summary>Checkout with the shortest non-full queue; staffed checkouts win ties. Null if all are full.</summary>
         public Checkout FindBestCheckout() =>
-            Checkouts.OrderBy(c => c.QueueLength).ThenBy(c => c.HasCashier ? 0 : 1).FirstOrDefault();
+            Checkouts.Where(c => !c.IsQueueFull).OrderBy(c => c.QueueLength).ThenBy(c => c.HasCashier ? 0 : 1).FirstOrDefault();
 
         /// <summary>The emptiest shelf that no other stocker is already serving.</summary>
         public Shelf FindShelfToRestock() =>
@@ -132,7 +132,8 @@ namespace IdleMart.World
                     slotId = slot.SlotId,
                     buildableId = slot.Built.Config.id,
                     level = slot.Built.Level,
-                    hasCashier = slot.Built is Checkout checkout && checkout.HasCashier
+                    hasCashier = slot.Built is Checkout checkout && checkout.HasCashier,
+                    stock = slot.Built is Shelf shelf ? shelf.Stock : -1
                 });
             }
 
@@ -156,6 +157,7 @@ namespace IdleMart.World
 
                 var built = slot.Place(config, entry.level);
                 if (entry.hasCashier && built is Checkout checkout) checkout.RestoreCashier();
+                if (built is Shelf shelf) shelf.RestoreStock(entry.stock);
             }
         }
 
