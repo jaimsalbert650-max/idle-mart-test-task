@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056e7039896105c48815ab722c415a3b, type: 3}
+  m_Name: shelf_fruits
+  m_EditorClassIdentifier: IdleMart.Runtime::IdleMart.Configs.BuildableConfig
+  id: shelf_fruits
+  displayName: Fruit stand
+  kind: 0
+  prefab: {fileID: 1847247541813952982, guid: f8d4e2c122fc43444b37886cf16ac522, type: 3}
+  unlockLevel: 1
+  buildCost: 40
+  upgradeCostGrowth: 1.6
+  maxLevel: 5
+  product: {fileID: 11400000, guid: df176ea359469af4a89fa5115c0e4274, type: 2}
+  baseCapacity: 5
+  capacityPerLevel: 1
+  pricePerLevel: 0.15
+  baseServiceTime: 2.5
+  serviceTimePerLevel: 0.35
+  cashierHireCost: 150

@@ -1,6 +1,10 @@
 {
     "name": "IdleMart.Runtime",
     "rootNamespace": "IdleMart",
-    "references": [],
+    "references": [
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
+    ],
     "autoReferenced": true
 }

@@ -1,0 +1,14 @@
+{
+    "name": "IdleMart.Editor",
+    "rootNamespace": "IdleMart.EditorTools",
+    "references": [
+        "IdleMart.Runtime",
+        "Unity.AI.Navigation",
+        "Unity.AI.Navigation.Editor",
+        "Unity.TextMeshPro",
+        "Unity.InputSystem",
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": ["Editor"],
+    "autoReferenced": false
+}

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056e7039896105c48815ab722c415a3b, type: 3}
+  m_Name: checkout
+  m_EditorClassIdentifier: IdleMart.Runtime::IdleMart.Configs.BuildableConfig
+  id: checkout
+  displayName: Checkout
+  kind: 1
+  prefab: {fileID: 5703694982727540265, guid: 6dfe1abd1d28e2943b9056bc1a9e170b, type: 3}
+  unlockLevel: 1
+  buildCost: 60
+  upgradeCostGrowth: 1.7
+  maxLevel: 5
+  product: {fileID: 0}
+  baseCapacity: 6
+  capacityPerLevel: 2
+  pricePerLevel: 0.15
+  baseServiceTime: 2.5
+  serviceTimePerLevel: 0.35
+  cashierHireCost: 150

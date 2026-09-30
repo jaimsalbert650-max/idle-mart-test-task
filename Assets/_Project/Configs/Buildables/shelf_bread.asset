@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 056e7039896105c48815ab722c415a3b, type: 3}
+  m_Name: shelf_bread
+  m_EditorClassIdentifier: IdleMart.Runtime::IdleMart.Configs.BuildableConfig
+  id: shelf_bread
+  displayName: Bread stand
+  kind: 0
+  prefab: {fileID: 6674533438224035277, guid: ef4a20443e0b91340a5d35938e7881da, type: 3}
+  unlockLevel: 2
+  buildCost: 120
+  upgradeCostGrowth: 1.6
+  maxLevel: 5
+  product: {fileID: 11400000, guid: 1890e7ecf271b2a4da1c5d726813f039, type: 2}
+  baseCapacity: 6
+  capacityPerLevel: 2
+  pricePerLevel: 0.15
+  baseServiceTime: 2.5
+  serviceTimePerLevel: 0.35
+  cashierHireCost: 150

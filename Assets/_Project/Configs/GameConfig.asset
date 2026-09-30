@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47db26f5b585b54ba612fcdc86b0f04, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: IdleMart.Runtime::IdleMart.Configs.GameConfig
+  startMoney: 150
+  levelThresholds: 1e0000005a000000c80000007c0100008a020000e8030000dc05000098080000800c0000
+  baseCustomersPerMinute: 8
+  customersPerMinutePerLevel: 1.5
+  maxCustomers: 25
+  maxItemsPerCustomer: 2
+  stockerBaseHireCost: 120
+  stockerHireCostGrowth: 1.8
+  stockersPerLevel: 0.5
+  stockerCarryAmount: 4
+  offlineCapSeconds: 7200
+  offlineEfficiency: 0.5
+  products:
+  - {fileID: 11400000, guid: df176ea359469af4a89fa5115c0e4274, type: 2}
+  - {fileID: 11400000, guid: 1890e7ecf271b2a4da1c5d726813f039, type: 2}
+  - {fileID: 11400000, guid: 043802858305c524790357e9256985e0, type: 2}
+  - {fileID: 11400000, guid: 7154c486892b52c49bf61f2946d7b120, type: 2}
+  - {fileID: 11400000, guid: 8f5202000f39a9a41b3bbbf95c2d7e55, type: 2}
+  - {fileID: 11400000, guid: 5d255336e8f2c914d9ef1bd35aae34ed, type: 2}
+  buildables:
+  - {fileID: 11400000, guid: 803770a7726dbba4c816c2ab6844d947, type: 2}
+  - {fileID: 11400000, guid: 977e8868db3c6084b87779e83801d179, type: 2}
+  - {fileID: 11400000, guid: 882e613bd64ec454482899d7b0281a24, type: 2}
+  - {fileID: 11400000, guid: c2b9a65f14b8eec4abbe328a7c5dae85, type: 2}
+  - {fileID: 11400000, guid: 22994744735b9e744859ee710b651483, type: 2}
+  - {fileID: 11400000, guid: 878448d9fb49be2439e09bffdbaa0026, type: 2}
+  - {fileID: 11400000, guid: 7c27a563a0f6bfb4d902504569ad2df5, type: 2}
+  expansions:
+  - {fileID: 11400000, guid: cc38df6ba5d37a54aa46160e6553e9e5, type: 2}
+  - {fileID: 11400000, guid: e34d1d2a476f15b4896841259709c968, type: 2}
