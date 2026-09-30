@@ -1,0 +1,6 @@
+{
+    "name": "IdleMart.Runtime",
+    "rootNamespace": "IdleMart",
+    "references": [],
+    "autoReferenced": true
+}
