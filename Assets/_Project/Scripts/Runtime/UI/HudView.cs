@@ -12,6 +12,7 @@ namespace IdleMart.UI
         [SerializeField] private TMP_Text income;
         [SerializeField] private TMP_Text level;
         [SerializeField] private Image xpFill;
+        [SerializeField] private TMP_Text rating;
         [Tooltip("Coin image flown from the checkout to the money counter on every sale.")]
         [SerializeField] private Image coinTemplate;
 
@@ -29,6 +30,8 @@ namespace IdleMart.UI
             _shownMoney = services.Wallet.Money;
             services.Wallet.Changed += OnMoneyChanged;
             services.SaleAt += FlyCoin;
+            services.Rating.Changed += OnRatingChanged;
+            OnRatingChanged(services.Rating.Value);
             if (coinTemplate != null) coinTemplate.gameObject.SetActive(false);
             services.Progress.XpChanged += _ => RefreshLevel();
             services.Progress.LevelUp += _ => UiTween.Punch(level.transform, 0.3f, 0.4f);
@@ -41,6 +44,15 @@ namespace IdleMart.UI
             if (_services == null) return;
             _services.Wallet.Changed -= OnMoneyChanged;
             _services.SaleAt -= FlyCoin;
+            _services.Rating.Changed -= OnRatingChanged;
+        }
+
+        private void OnRatingChanged(float value)
+        {
+            if (rating == null) return;
+            rating.text = value.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+            // Green when customers are happy, red when the store is losing them.
+            rating.color = value >= 3.5f ? new Color(0.6f, 1f, 0.6f) : value >= 2.5f ? Color.white : new Color(1f, 0.55f, 0.5f);
         }
 
         /// <summary>A coin pops out of the checkout and arcs into the money counter.</summary>
@@ -109,8 +121,9 @@ namespace IdleMart.UI
         }
 
 #if UNITY_EDITOR
-        public void EditorSetup(TMP_Text moneyText, TMP_Text incomeText, TMP_Text levelText, Image xp, Image coin)
+        public void EditorSetup(TMP_Text moneyText, TMP_Text incomeText, TMP_Text levelText, Image xp, Image coin, TMP_Text ratingText)
         {
+            rating = ratingText;
             coinTemplate = coin;
             money = moneyText;
             income = incomeText;

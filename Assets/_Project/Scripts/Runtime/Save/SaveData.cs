@@ -16,6 +16,8 @@ namespace IdleMart.Save
         public long savedAtUnix;
         public double incomePerSecond;
         public int stockers;
+        /// <summary>Store rating in stars; -1 = not saved yet (older saves).</summary>
+        public float rating = -1f;
         public List<BuiltObjectData> built = new List<BuiltObjectData>();
         public List<string> unlockedZones = new List<string>();
     }

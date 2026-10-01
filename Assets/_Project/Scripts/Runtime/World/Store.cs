@@ -114,6 +114,9 @@ namespace IdleMart.World
         /// <summary>Extra customer flow from bought expansions (e.g. parking).</summary>
         public float ExtraCustomersPerMinute => zones.Where(z => z.IsUnlocked).Sum(z => z.Config.extraCustomersPerMinute);
 
+        /// <summary>A customer left unhappy (sold out, long queue): the store rating drops.</summary>
+        public void ReportComplaint() => _services.Rating.Complained();
+
         // ---------- AI queries ----------
 
         /// <summary>Products that currently have at least one shelf built.</summary>

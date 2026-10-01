@@ -475,9 +475,15 @@ namespace IdleMart.EditorTools
             levelBox.rectTransform.Anchor(new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(420f, -24f), new Vector2(300f, 120f));
             var level = Label(levelBox.transform, "Level", "Lv 1", 44f, TextColor, TextAlignmentOptions.Center, true);
             level.rectTransform.Anchor(new Vector2(0f, 0.4f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(20f, -6f), new Vector2(-40f, 0f));
-            var star = Icon(levelBox.transform, "star", 48f, new Vector2(48f, 18f), Gold);
+            Icon(levelBox.transform, "trophy", 46f, new Vector2(48f, 18f), Gold);
+
+            // Store rating (stars) next to the level.
+            var ratingBox = Box(canvas.transform, "RatingBox", PanelColor);
+            ratingBox.rectTransform.Anchor(new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(740f, -24f), new Vector2(190f, 120f));
+            var star = Icon(ratingBox.transform, "star", 56f, new Vector2(52f, 0f), Color.white);
             star.sprite = ContentBuilder.UiSprite("star");
-            star.color = Color.white;
+            var ratingText = Label(ratingBox.transform, "Rating", "3.5", 44f, TextColor, TextAlignmentOptions.Left, true);
+            ratingText.rectTransform.Anchor(new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(0f, 0.5f), new Vector2(92f, 0f), new Vector2(-100f, 0f));
             var xpBack = Box(levelBox.transform, "XpBack", PanelLight);
             xpBack.rectTransform.Anchor(new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-40f, 26f));
             var xpFill = Box(xpBack.transform, "XpFill", Accent);
@@ -570,7 +576,7 @@ namespace IdleMart.EditorTools
             var coinLabel = Label(coin.transform, "Label", "$", 30f, new Color(0.55f, 0.38f, 0.05f), TextAlignmentOptions.Center, true);
             coinLabel.rectTransform.Stretch();
             coin.gameObject.SetActive(false);
-            hud.EditorSetup(money, income, level, xpFill, coin);
+            hud.EditorSetup(money, income, level, xpFill, coin, ratingText);
 
             var ui = canvas.gameObject.AddComponent<GameUI>();
             ui.EditorSetup(game, hud, contextPanel, staffPanel, settingsPanel, toast, staffButton, pauseButton,

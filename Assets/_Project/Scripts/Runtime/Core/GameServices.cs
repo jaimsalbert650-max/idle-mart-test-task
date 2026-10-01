@@ -16,6 +16,7 @@ namespace IdleMart.Core
         public Wallet Wallet { get; }
         public PlayerProgress Progress { get; }
         public IncomeTracker Income { get; }
+        public StoreRating Rating { get; } = new StoreRating();
 
         /// <summary>Raised whenever something the player can buy changes (built, upgraded, unlocked).</summary>
         public event Action StoreChanged;

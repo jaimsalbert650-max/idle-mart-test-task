@@ -138,6 +138,8 @@ namespace IdleMart.UI
                 hint = "Customers wait at the checkout: click it to serve them, or hire a cashier.";
             else if (game.Staff.StockerCount == 0 && game.Staff.MaxStockers > 0)
                 hint = "Tip: hire a stocker (Staff button) to refill shelves automatically.";
+            else if (game.Services.Rating.Value < 3f)
+                hint = "Customers are unhappy! Keep shelves stocked and queues short to raise your rating.";
 
             var show = hint != null;
             if (show) hintText.text = hint;

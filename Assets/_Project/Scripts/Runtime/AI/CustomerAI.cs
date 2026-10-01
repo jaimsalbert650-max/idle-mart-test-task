@@ -218,6 +218,7 @@ namespace IdleMart.AI
         private void Complain(string text)
         {
             _motor.Animator.PlayNo();
+            _store.ReportComplaint();
             WorldFx.ShowBubble(transform, text);
         }
 

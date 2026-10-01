@@ -105,7 +105,8 @@ namespace IdleMart.Core
                 savedAtUnix = Services.Clock.UtcUnixSeconds,
                 // Right after loading the tracker is still empty, keep the previous rate.
                 incomePerSecond = rate > 0 ? rate : _loadedIncomeRate,
-                stockers = staffService.StockerCount
+                stockers = staffService.StockerCount,
+                rating = Services.Rating.Value
             };
             store.CaptureTo(data);
 
@@ -123,6 +124,7 @@ namespace IdleMart.Core
         {
             Services.Wallet.Set(data.money);
             Services.Progress.SetXp(data.xp);
+            Services.Rating.Set(data.rating);
             store.RestoreFrom(data);
             staffService.Restore(Math.Min(data.stockers, staffService.MaxStockers));
             _loadedIncomeRate = data.incomePerSecond;

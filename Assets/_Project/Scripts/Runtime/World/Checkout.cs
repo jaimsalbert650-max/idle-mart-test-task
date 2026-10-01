@@ -100,6 +100,7 @@ namespace IdleMart.World
 
             var (money, xp) = customer.Pay();
             Services.RegisterSale(money, xp, transform.position + Vector3.up);
+            Services.Rating.Satisfied();
             if (_cashier != null) _cashier.PlayInteract();
             Settings.AudioService.Play(Settings.Sfx.Coin);
             WorldFx.ShowText(transform.position + Vector3.up * 1.1f, $"+${money}", new Color(1f, 0.85f, 0.2f));

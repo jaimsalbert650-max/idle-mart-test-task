@@ -36,6 +36,7 @@ namespace IdleMart.AI
                 var rate = config.baseCustomersPerMinute
                            + config.customersPerMinutePerLevel * (_services.Progress.Level - 1)
                            + _store.ExtraCustomersPerMinute;
+                rate *= _services.Rating.FlowMultiplier;
                 return CampaignRemaining > 0f ? rate * CampaignMultiplier : rate;
             }
         }
