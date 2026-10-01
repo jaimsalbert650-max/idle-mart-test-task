@@ -21,6 +21,7 @@ namespace IdleMart.EditorTools
             Directory.CreateDirectory(Output);
             Capture(SceneBuilder.ScenePath, "game.png");
             Capture(ContentBuilder.Root + "/Scenes/MainMenu.unity", "menu.png");
+            Capture(SceneBuilder.ScenePath, "street.png");
         }
 
         public static void BuildAndCapture()
@@ -43,6 +44,7 @@ namespace IdleMart.EditorTools
             }
 
             if (scenePath == SceneBuilder.ScenePath) StageDemo();
+            if (fileName == "street.png") cam.transform.position += new Vector3(0f, 6f, -14f);
 
             // Panels start hidden at runtime; hide them for the shot too.
             foreach (var name in new[] { "SettingsPanel", "PauseMenu", "OfflinePopup", "ContextPanel", "StaffPanel", "Toast", "ConfirmNewGame" })
@@ -118,7 +120,7 @@ namespace IdleMart.EditorTools
         public static void LogModelSizes()
         {
             var sb = new StringBuilder();
-            foreach (var pack in new[] { "car-kit", "nature-kit" })
+            foreach (var pack in new[] { "city-commercial", "city-roads", "car-kit" })
             foreach (var file in Directory.GetFiles($"{ContentBuilder.Art}/{pack}", "*.fbx"))
             {
                 var go = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(file.Replace('\\', '/')));

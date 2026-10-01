@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 namespace IdleMart.EditorTools
 {
     /// <summary>
-    /// Dresses the Game scene: road with traffic, parked cars, trees, bushes, flowers, the store sign,
+    /// Dresses the Game scene: road with traffic, a row of town buildings, street lights, parked cars, trees, bushes, flowers, the store sign,
     /// post-processing and nicer ambient light. Purely visual; uses a fixed random seed so rebuilds are identical.
     /// </summary>
     public static class EnvironmentBuilder
@@ -26,6 +26,7 @@ namespace IdleMart.EditorTools
             env.SetParent(world, false);
 
             BuildRoad(env);
+            BuildStreet(env);
             BuildTrees(env);
             BuildGreenery(env);
             BuildParkedCars(parking);
@@ -54,24 +55,65 @@ namespace IdleMart.EditorTools
             return go;
         }
 
+        private const float RoadScale = 2.6f;
+        private const float BuildingScale = 2.3f;
+
+        private static readonly string[] Shops = { "building-a", "building-b", "building-c", "building-d", "building-e", "building-f", "building-g", "building-h", "building-i", "building-j", "building-k", "building-l" };
+
         private static void BuildRoad(Transform env)
         {
             var road = new GameObject("Road").transform;
             road.SetParent(env, false);
-            var asphalt = ContentBuilder.ColorMaterial("Asphalt", new Color(0.32f, 0.33f, 0.37f), unlit: false);
-            var stripe = ContentBuilder.ColorMaterial("RoadStripe", new Color(0.95f, 0.92f, 0.75f), unlit: false);
-            var curb = ContentBuilder.ColorMaterial("Curb", new Color(0.78f, 0.78f, 0.8f), unlit: false);
 
-            Slab(road, "Asphalt", asphalt, new Vector3(8f, -0.005f, -8f), new Vector3(40f, 0.02f, 2.6f));
-            Slab(road, "CurbNear", curb, new Vector3(8f, 0.01f, -6.65f), new Vector3(40f, 0.06f, 0.12f));
-            Slab(road, "CurbFar", curb, new Vector3(8f, 0.01f, -9.35f), new Vector3(40f, 0.06f, 0.12f));
-            for (var x = -11f; x < 28f; x += 1.6f)
-                Slab(road, "Stripe", stripe, new Vector3(x, 0.01f, -8f), new Vector3(0.8f, 0.02f, 0.08f));
+            // Kenney City Kit road tiles along X, with a zebra crossing in front of the store entrance.
+            for (var x = -13f; x < 30f; x += RoadScale)
+            {
+                var model = Mathf.Abs(x - 4.6f) < RoadScale * 0.5f ? "city-roads/road-crossing" : "city-roads/road-straight";
+                Place(model, road, new Vector3(x, -0.03f, -8f), 0f, RoadScale);
+            }
+
+            var curb = ContentBuilder.ColorMaterial("Curb", new Color(0.78f, 0.78f, 0.8f), unlit: false);
+            Slab(road, "CurbNear", curb, new Vector3(8f, 0.01f, -6.65f), new Vector3(46f, 0.06f, 0.12f));
+            Slab(road, "CurbFar", curb, new Vector3(8f, 0.01f, -9.35f), new Vector3(46f, 0.06f, 0.12f));
+
+            // Street lights and a few city details along the near curb.
+            for (var x = -4f; x < 22f; x += 5f)
+                Place("city-roads/light-square", road, new Vector3(x, 0f, -6.4f), 180f, 2.4f);
+            Place("city-roads/road-sign-street", road, new Vector3(1.6f, 0f, -6.3f), 0f, 2.2f);
+            Place("city-roads/dumpster", road, new Vector3(16f, 0f, -0.7f), 90f, 2.2f);
 
             // A couple of cars passing by (static decoration).
             Place("car-kit/taxi", road, new Vector3(-2f, 0f, -8.6f), 90f, CarScale);
             Place("car-kit/delivery", road, new Vector3(18.5f, 0f, -7.4f), -90f, CarScale);
             Place("car-kit/cone", road, new Vector3(15f, 0f, -6.4f), 0f, 0.5f);
+        }
+
+        /// <summary>A row of neighbouring shops across the road gives the store a town around it.</summary>
+        private static void BuildStreet(Transform env)
+        {
+            var street = new GameObject("Street").transform;
+            street.SetParent(env, false);
+
+            var pavement = ContentBuilder.ColorMaterial("FarPavement", new Color(0.72f, 0.72f, 0.74f), unlit: false);
+            Slab(street, "Pavement", pavement, new Vector3(8f, -0.01f, -10.6f), new Vector3(46f, 0.02f, 2.4f));
+
+            var x = -12f;
+            while (x < 29f)
+            {
+                var model = Shops[_random.Next(Shops.Length)];
+                var go = Place("city-commercial/" + model, street, Vector3.zero, 180f, BuildingScale);
+                var width = BoundsOf(go).size.x;
+                go.transform.position = new Vector3(x + width * 0.5f, 0f, -12f - BoundsOf(go).extents.z);
+                x += width + 0.1f;
+            }
+        }
+
+        private static Bounds BoundsOf(GameObject go)
+        {
+            var renderers = go.GetComponentsInChildren<Renderer>();
+            var bounds = renderers[0].bounds;
+            foreach (var r in renderers) bounds.Encapsulate(r.bounds);
+            return bounds;
         }
 
         private static void BuildTrees(Transform env)

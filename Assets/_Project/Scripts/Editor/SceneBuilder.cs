@@ -101,6 +101,14 @@ namespace IdleMart.EditorTools
                 Place("mini-market/floor", parent, new Vector3(x + 0.5f, 0f, z + 0.5f));
         }
 
+        /// <summary>Outdoor paving tiles (Kenney City Kit) for the sidewalk and the parking lot.</summary>
+        private static void Pavement(Transform parent, int x0, int x1, int z0, int z1)
+        {
+            for (var x = x0; x < x1; x++)
+            for (var z = z0; z < z1; z++)
+                Place("city-roads/tile-low", parent, new Vector3(x + 0.5f, -0.012f, z + 0.5f));
+        }
+
         /// <summary>A straight wall along X (facing ±Z) or Z (facing ±X) from a to b, skipping door cells.</summary>
         private static List<GameObject> WallLine(Transform parent, Vector3 from, int length, bool alongX, float yaw, ICollection<int> gaps = null, ICollection<int> windows = null)
         {
@@ -188,7 +196,8 @@ namespace IdleMart.EditorTools
 
             // Sidewalk in front of the entrance.
             var walk = Group(_world, "Sidewalk");
-            Floor(walk, 2, 7, -5, 0);
+            Pavement(walk, -3, 19, -6, -5);
+            Pavement(walk, 2, 7, -5, 0);
         }
 
         private static Transform BuildHall1(List<BuildSlot> slots)
@@ -277,7 +286,14 @@ namespace IdleMart.EditorTools
             var zone = zoneGo.AddComponent<ExpansionZone>();
 
             var revealed = Group(zoneGo.transform, "Parking");
-            Floor(revealed, 7, 14, -6, -1);
+            var asphalt = ContentBuilder.ColorMaterial("ParkingAsphalt", new Color(0.36f, 0.37f, 0.41f), unlit: false);
+            var lot = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            lot.name = "Asphalt";
+            Object.DestroyImmediate(lot.GetComponent<Collider>());
+            lot.transform.SetParent(revealed, false);
+            lot.transform.position = new Vector3(10.5f, 0.005f, -3.5f);
+            lot.transform.localScale = new Vector3(7f, 0.02f, 5f);
+            lot.GetComponent<Renderer>().sharedMaterial = asphalt;
             for (var x = 7; x < 14; x++)
             {
                 Place("mini-market/fence", revealed, new Vector3(x + 0.5f, 0f, -6f), 0f);
