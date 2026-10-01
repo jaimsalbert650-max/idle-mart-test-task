@@ -16,6 +16,9 @@ namespace IdleMart.UI
         [SerializeField] private Image background;
         [SerializeField] private Color normalColor = new Color(0.25f, 0.62f, 0.4f);
         [SerializeField] private Color disabledColor = new Color(0.45f, 0.45f, 0.5f);
+        [Tooltip("Optional: when set, enabled/disabled swap sprites instead of tinting.")]
+        [SerializeField] private Sprite normalSprite;
+        [SerializeField] private Sprite disabledSprite;
 
         private Action _onClick;
 
@@ -32,7 +35,12 @@ namespace IdleMart.UI
             subtitle.gameObject.SetActive(!string.IsNullOrEmpty(subtitleText));
             price.text = priceText;
             price.transform.parent.gameObject.SetActive(!string.IsNullOrEmpty(priceText));
-            background.color = enabled ? normalColor : disabledColor;
+            if (normalSprite != null && disabledSprite != null)
+            {
+                background.sprite = enabled ? normalSprite : disabledSprite;
+                background.color = enabled ? Color.white : disabledColor;
+            }
+            else background.color = enabled ? normalColor : disabledColor;
             // Disabled options stay clickable so the panel can explain why (not enough money, level).
             _onClick = onClick;
         }
@@ -45,6 +53,12 @@ namespace IdleMart.UI
             subtitle = subtitleLabel;
             price = priceLabel;
             background = bg;
+        }
+
+        public void EditorSetSprites(Sprite normal, Sprite disabled)
+        {
+            normalSprite = normal;
+            disabledSprite = disabled;
         }
 #endif
     }

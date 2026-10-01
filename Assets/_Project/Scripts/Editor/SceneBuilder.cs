@@ -50,6 +50,8 @@ namespace IdleMart.EditorTools
                 BuildParking(config.FindExpansion("parking"))
             };
 
+            EnvironmentBuilder.Dress(_world, zones[1].transform.Find("Parking"));
+
             var entrance = Point(_world, "Entrance", new Vector3(5f, 0f, -3.5f));
             var exit = Point(_world, "Exit", new Vector3(3f, 0f, -4.5f));
 
@@ -59,6 +61,7 @@ namespace IdleMart.EditorTools
 
             BakeNavMesh(zones);
             var (cam, controller) = BuildCameraAndLight();
+            EnvironmentBuilder.SetupLook(cam);
             BuildSystems(config, store, cam, controller);
 
             EditorSceneManager.SaveScene(scene, ScenePath);

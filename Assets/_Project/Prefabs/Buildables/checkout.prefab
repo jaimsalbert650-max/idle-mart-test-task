@@ -125,7 +125,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4b9c9cbafa3e0394d9c07560612cfdab, type: 2}
+  - {fileID: 2100000, guid: 80a46e541edc1ed489108690d0434616, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -169,10 +169,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: $
+  m_text: '!'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 4b9c9cbafa3e0394d9c07560612cfdab, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c07d3c7593f1b93439d0582904ff8e4b, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 80a46e541edc1ed489108690d0434616, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -196,8 +196,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 5
-  m_fontSizeBase: 5
+  m_fontSize: 6
+  m_fontSizeBase: 6
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -349,6 +349,7 @@ MonoBehaviour:
   cashierPoint: {fileID: 1979407878649474267}
   needsServiceMarker: {fileID: 3283559926567077087}
   queueSpacing: 0.6
+  maxQueueLength: 5
 --- !u!1001 &5414229930708291670
 PrefabInstance:
   m_ObjectHideFlags: 0

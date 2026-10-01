@@ -43,10 +43,11 @@ namespace IdleMart.EditorTools
             MusicGenerator.Generate();
             BuildSharedPrefabs();
             BuildBootScene();
-            BuildMenuScene();
             SceneBuilder.Build();
             BuildGameUi();
             EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
+            DevCapture.RenderMenuBackground();
+            BuildMenuScene();
             SetBuildOrder();
             Debug.Log("Idle Mart: everything built.");
         }
@@ -129,12 +130,38 @@ namespace IdleMart.EditorTools
             tmp.alignment = align;
             tmp.fontStyle = bold ? FontStyles.Bold : FontStyles.Normal;
             tmp.raycastTarget = false;
+            // Display font for bold titles/buttons/numbers, the plain TMP font for readable body text.
+            // Money ("$...") stays in the plain font: the display font's "$" reads like an "S".
+            var display = bold && !text.StartsWith("$");
+            tmp.font = display ? ContentBuilder.UiFont() : TMP_Settings.defaultFontAsset;
+            if (display) tmp.fontStyle = FontStyles.Normal;
             return tmp;
+        }
+
+        // Kenney UI Pack buttons: 9-sliced, with a darker "depth" edge at the bottom.
+        private static readonly Vector4 ButtonBorder = new Vector4(16f, 20f, 16f, 16f);
+
+        private static Sprite ButtonSprite(Color color)
+        {
+            var name = color == Accent ? "green" : color == Warning ? "red" : color == Gold ? "yellow" : color == Neutral ? "blue" : "grey";
+            return ContentBuilder.UiSprite($"button_rectangle_depth_flat_{name}", ButtonBorder);
+        }
+
+        private static Image Icon(Transform parent, string icon, float size, Vector2 position, Color color)
+        {
+            var image = Rect(parent, "Icon").gameObject.AddComponent<Image>();
+            image.sprite = ContentBuilder.UiSprite($"Icons/{icon}");
+            image.color = color;
+            image.raycastTarget = false;
+            image.rectTransform.Anchor(new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), new Vector2(0.5f, 0.5f), position, new Vector2(size, size));
+            return image;
         }
 
         private static Button TextButton(Transform parent, string name, string text, Color color, Vector2 size, float fontSize = 34f)
         {
-            var image = Box(parent, name, color);
+            var image = Box(parent, name, Color.white);
+            image.sprite = ButtonSprite(color);
+            image.pixelsPerUnitMultiplier = 1f;
             ((RectTransform)image.transform).sizeDelta = size;
             var button = image.gameObject.AddComponent<Button>();
             var colors = button.colors;
@@ -145,6 +172,7 @@ namespace IdleMart.EditorTools
 
             var label = Label(image.transform, "Label", text, fontSize, TextColor, TextAlignmentOptions.Center, true);
             label.rectTransform.Stretch();
+            label.rectTransform.offsetMin = new Vector2(0f, 6f); // Sit above the sprite's depth edge.
             var element = image.gameObject.AddComponent<LayoutElement>();
             element.preferredHeight = size.y;
             element.preferredWidth = size.x;
@@ -220,7 +248,9 @@ namespace IdleMart.EditorTools
 
         private static void BuildOptionButtonPrefab()
         {
-            var root = Box(null, "OptionButton", Accent);
+            var root = Box(null, "OptionButton", Color.white);
+            root.sprite = ButtonSprite(Accent);
+            root.pixelsPerUnitMultiplier = 1f;
             root.rectTransform.sizeDelta = new Vector2(480f, 96f);
             var button = root.gameObject.AddComponent<Button>();
             root.gameObject.AddComponent<LayoutElement>().preferredHeight = 96f;
@@ -238,6 +268,7 @@ namespace IdleMart.EditorTools
 
             var option = root.gameObject.AddComponent<OptionButton>();
             option.EditorSetup(button, title, subtitle, price, root);
+            option.EditorSetSprites(ButtonSprite(Accent), ButtonSprite(Color.gray));
 
             PrefabUtility.SaveAsPrefabAsset(root.gameObject, $"{UiPrefabs}/OptionButton.prefab");
             Object.DestroyImmediate(root.gameObject);
@@ -376,7 +407,17 @@ namespace IdleMart.EditorTools
             CreateEventSystem();
             var canvas = CreateCanvas("MenuCanvas", 0);
 
-            var stripe = Box(canvas.transform, "Stripe", new Color(0.25f, 0.62f, 0.4f, 0.25f), rounded: false);
+            var backgroundSprite = ContentBuilder.Load<Sprite>(DevCapture.MenuBackgroundPath);
+            if (backgroundSprite != null)
+            {
+                var background = Box(canvas.transform, "Background", Color.white, rounded: false);
+                background.sprite = backgroundSprite;
+                background.preserveAspect = false;
+                background.rectTransform.Stretch();
+                Box(canvas.transform, "Dim", new Color(0.06f, 0.08f, 0.13f, 0.72f), rounded: false).rectTransform.Stretch();
+            }
+
+            var stripe = Box(canvas.transform, "Stripe", new Color(0.1f, 0.3f, 0.2f, 0.75f), rounded: false);
             stripe.rectTransform.Anchor(new Vector2(0f, 0.5f), new Vector2(1f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 250f), new Vector2(0f, 260f));
 
             var title = Label(canvas.transform, "Title", "IDLE MART", 150f, Gold, TextAlignmentOptions.Center, true);
@@ -433,7 +474,10 @@ namespace IdleMart.EditorTools
             var levelBox = Box(canvas.transform, "LevelBox", PanelColor);
             levelBox.rectTransform.Anchor(new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(420f, -24f), new Vector2(300f, 120f));
             var level = Label(levelBox.transform, "Level", "Lv 1", 44f, TextColor, TextAlignmentOptions.Center, true);
-            level.rectTransform.Anchor(new Vector2(0f, 0.4f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -6f), Vector2.zero);
+            level.rectTransform.Anchor(new Vector2(0f, 0.4f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(20f, -6f), new Vector2(-40f, 0f));
+            var star = Icon(levelBox.transform, "star", 48f, new Vector2(48f, 18f), Gold);
+            star.sprite = ContentBuilder.UiSprite("star");
+            star.color = Color.white;
             var xpBack = Box(levelBox.transform, "XpBack", PanelLight);
             xpBack.rectTransform.Anchor(new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 20f), new Vector2(-40f, 26f));
             var xpFill = Box(xpBack.transform, "XpFill", Accent);
@@ -445,10 +489,13 @@ namespace IdleMart.EditorTools
             hud.EditorSetup(money, income, level, xpFill);
 
             // Top-right buttons.
-            var pauseButton = TextButton(canvas.transform, "PauseButton", "II", Neutral, new Vector2(96f, 96f), 40f);
+            var pauseButton = TextButton(canvas.transform, "PauseButton", "", Neutral, new Vector2(96f, 96f), 40f);
             ((RectTransform)pauseButton.transform).Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-24f, -24f), new Vector2(96f, 96f));
-            var staffButton = TextButton(canvas.transform, "StaffButton", "Staff", Accent, new Vector2(200f, 96f), 36f);
-            ((RectTransform)staffButton.transform).Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-140f, -24f), new Vector2(200f, 96f));
+            Icon(pauseButton.transform, "pause", 52f, new Vector2(48f, 4f), Color.white);
+            var staffButton = TextButton(canvas.transform, "StaffButton", "Staff", Accent, new Vector2(230f, 96f), 32f);
+            ((RectTransform)staffButton.transform).Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-140f, -24f), new Vector2(230f, 96f));
+            staffButton.GetComponentInChildren<TextMeshProUGUI>().rectTransform.offsetMin = new Vector2(70f, 6f);
+            Icon(staffButton.transform, "multiplayer", 52f, new Vector2(46f, 4f), Color.white);
 
             // Context panel (right side).
             var context = Box(canvas.transform, "ContextPanel", PanelColor);
@@ -461,7 +508,8 @@ namespace IdleMart.EditorTools
             contextBody.enableWordWrapping = true;
             var options = Rect(context.transform, "Options");
             Column(options.gameObject, 10f, 0);
-            var close = TextButton(context.transform, "Close", "X", Warning, new Vector2(56f, 56f), 30f);
+            var close = TextButton(context.transform, "Close", "", Warning, new Vector2(56f, 56f), 30f);
+            Icon(close.transform, "cross", 34f, new Vector2(28f, 3f), Color.white);
             close.GetComponent<LayoutElement>().ignoreLayout = true;
             ((RectTransform)close.transform).Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-16f, -16f), new Vector2(56f, 56f));
             var contextPanel = context.gameObject.AddComponent<ContextPanel>();
@@ -478,7 +526,8 @@ namespace IdleMart.EditorTools
             staffBody.enableWordWrapping = true;
             var hire = ((GameObject)PrefabUtility.InstantiatePrefab(optionPrefab.gameObject, staff.transform)).GetComponent<OptionButton>();
             var campaign = ((GameObject)PrefabUtility.InstantiatePrefab(optionPrefab.gameObject, staff.transform)).GetComponent<OptionButton>();
-            var staffClose = TextButton(staff.transform, "Close", "X", Warning, new Vector2(56f, 56f), 30f);
+            var staffClose = TextButton(staff.transform, "Close", "", Warning, new Vector2(56f, 56f), 30f);
+            Icon(staffClose.transform, "cross", 34f, new Vector2(28f, 3f), Color.white);
             staffClose.GetComponent<LayoutElement>().ignoreLayout = true;
             ((RectTransform)staffClose.transform).Anchor(Vector2.one, Vector2.one, Vector2.one, new Vector2(-16f, -16f), new Vector2(56f, 56f));
             var staffPanel = staff.gameObject.AddComponent<StaffPanel>();

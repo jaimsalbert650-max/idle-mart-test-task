@@ -53,6 +53,50 @@ namespace IdleMart.EditorTools
             AssetDatabase.Refresh();
         }
 
+        public const string UiArt = Root + "/Art/UI";
+
+        /// <summary>Kenney Future as a static TMP font (ASCII), with the default TMP font as fallback for other glyphs.</summary>
+        public static TMP_FontAsset UiFont()
+        {
+            var path = $"{UiArt}/KenneyFuture SDF.asset";
+            var existing = Load<TMP_FontAsset>(path);
+            if (existing != null) return existing;
+
+            var font = Load<Font>($"{UiArt}/Kenney Future.ttf");
+            var asset = TMP_FontAsset.CreateFontAsset(font, 64, 6, UnityEngine.TextCore.LowLevel.GlyphRenderMode.SDFAA, 1024, 1024);
+            asset.name = "KenneyFuture SDF";
+            var ascii = new string(Enumerable.Range(32, 95).Select(i => (char)i).ToArray());
+            asset.TryAddCharacters(ascii);
+            asset.atlasPopulationMode = AtlasPopulationMode.Static;
+            asset.fallbackFontAssetTable = new List<TMP_FontAsset> { TMP_Settings.defaultFontAsset };
+
+            AssetDatabase.CreateAsset(asset, path);
+            asset.material.name = "KenneyFuture Material";
+            asset.atlasTextures[0].name = "KenneyFuture Atlas";
+            AssetDatabase.AddObjectToAsset(asset.material, asset);
+            AssetDatabase.AddObjectToAsset(asset.atlasTextures[0], asset);
+            AssetDatabase.SaveAssets();
+            return asset;
+        }
+
+        /// <summary>Imports a UI PNG as a sliced sprite (border in pixels: left, bottom, right, top).</summary>
+        public static Sprite UiSprite(string file, Vector4 border = default)
+        {
+            var path = $"{UiArt}/{file}.png";
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            if (importer.textureType != TextureImporterType.Sprite || importer.spriteBorder != border)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.mipmapEnabled = false;
+                importer.alphaIsTransparency = true;
+                importer.spriteBorder = border;
+                importer.SaveAndReimport();
+            }
+
+            return Load<Sprite>(path);
+        }
+
         /// <summary>Furniture Kit is authored ~10x larger than the Mini series; bring it to the same scale.</summary>
         private static void NormalizeFurnitureScale()
         {
@@ -295,7 +339,7 @@ namespace IdleMart.EditorTools
             var counter = Point(root.transform, "CounterPoint", new Vector3(0f, 0f, bounds.max.z + 0.35f), 180f);
             var cashier = Point(root.transform, "CashierPoint", new Vector3(0f, 0f, bounds.min.z - 0.3f), 0f);
 
-            var marker = BuildText(root.transform, "NeedsServiceMarker", "$", 5f, new Color(1f, 0.85f, 0.2f));
+            var marker = BuildText(root.transform, "NeedsServiceMarker", "!", 6f, new Color(1f, 0.85f, 0.2f));
             marker.transform.localPosition = new Vector3(0f, bounds.max.y + 0.45f, 0f);
             marker.gameObject.AddComponent<Billboard>().EditorSetup(0.06f);
 
@@ -367,12 +411,12 @@ namespace IdleMart.EditorTools
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.enableWordWrapping = false;
             tmp.rectTransform.sizeDelta = new Vector2(4f, 1f);
+            tmp.font = UiFont();
             tmp.fontSharedMaterial = OutlinedFontMaterial();
             return tmp;
         }
 
-        /// <summary>Shared font material with a dark outline (setting outline per text would create leaking instances).</summary>
-        public static Material OutlinedFontMaterial()
+        public static Material OutlinedDefaultFontMaterial()
         {
             var path = $"{Materials}/Font_Outlined.mat";
             var material = Load<Material>(path);
@@ -386,10 +430,28 @@ namespace IdleMart.EditorTools
             return material;
         }
 
+        /// <summary>Shared font material with a dark outline (setting outline per text would create leaking instances).</summary>
+        public static Material OutlinedFontMaterial()
+        {
+            var path = $"{Materials}/Font_Outlined_Kenney.mat";
+            var material = Load<Material>(path);
+            if (material != null) return material;
+
+            material = new Material(UiFont().material);
+            material.EnableKeyword("OUTLINE_ON");
+            material.SetFloat("_OutlineWidth", 0.25f);
+            material.SetColor("_OutlineColor", new Color32(30, 30, 40, 255));
+            AssetDatabase.CreateAsset(material, path);
+            return material;
+        }
+
         private static GameObject BuildLabel(string name, float size, Color color)
         {
             var holder = new GameObject("Holder");
             var label = BuildText(holder.transform, name, "Text", size, color);
+            // Money texts ("+$10") read better in the plain font: the display font's "$" looks like an "S".
+            label.font = TMP_Settings.defaultFontAsset;
+            label.fontSharedMaterial = OutlinedDefaultFontMaterial();
             label.transform.SetParent(null);
             Object.DestroyImmediate(holder);
             return label.gameObject;
