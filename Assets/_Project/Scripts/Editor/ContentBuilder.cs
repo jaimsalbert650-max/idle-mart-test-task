@@ -327,7 +327,7 @@ namespace IdleMart.EditorTools
 
             var shelf = root.AddComponent<Shelf>();
             shelf.EditorSetup(stand, stockBar);
-            shelf.EditorSetBadge(LevelBadge(root.transform, bounds.max.y + 0.48f));
+            shelf.EditorSetBadge(LevelBadge(root.transform, bounds.max.y + 0.55f));
             return root;
         }
 
@@ -353,7 +353,7 @@ namespace IdleMart.EditorTools
 
         private static TextMeshPro LevelBadge(Transform parent, float height)
         {
-            var badge = BuildText(parent, "LevelBadge", "Lv 2", 2.6f, new Color(0.55f, 1f, 0.6f));
+            var badge = BuildText(parent, "LevelBadge", "Lv 2", 2f, new Color(0.55f, 1f, 0.6f));
             badge.transform.localPosition = new Vector3(0f, height, 0f);
             badge.gameObject.AddComponent<Billboard>();
             badge.gameObject.SetActive(false);
