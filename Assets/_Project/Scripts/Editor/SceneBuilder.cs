@@ -374,6 +374,7 @@ namespace IdleMart.EditorTools
             var input = new GameObject("ClickInput").AddComponent<ClickInput>();
             input.transform.SetParent(systems.transform);
             input.EditorSetup(cam, controller);
+            input.gameObject.AddComponent<HoverHighlight>();
 
             var bootstrap = new GameObject("GameBootstrap").AddComponent<GameBootstrap>();
             bootstrap.transform.SetParent(systems.transform);

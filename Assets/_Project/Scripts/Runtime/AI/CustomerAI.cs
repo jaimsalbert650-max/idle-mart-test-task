@@ -28,6 +28,9 @@ namespace IdleMart.AI
         private const float DecideDelay = 0.6f;
         private const float MaxLifetime = 240f;
 
+        [Tooltip("Shopping basket shown once the customer has picked up something.")]
+        [SerializeField] private GameObject basket;
+
         private readonly List<ProductConfig> _shoppingList = new List<ProductConfig>();
 
         private Store _store;
@@ -54,6 +57,7 @@ namespace IdleMart.AI
         {
             _store = store;
             _onDespawn = onDespawn;
+            if (basket != null) basket.SetActive(false);
 
             var onSale = store.ProductsOnSale();
             var count = UnityEngine.Random.Range(1, maxItems + 1);
@@ -71,6 +75,7 @@ namespace IdleMart.AI
             _cartXp = 0;
             _checkout = null;
             _motor.Animator.PlayYes();
+            if (basket != null) basket.SetActive(false);
             Leave();
             return result;
         }
@@ -156,6 +161,7 @@ namespace IdleMart.AI
             {
                 _cartValue += _shelf.SalePrice;
                 _cartXp += product.xpPerSale;
+                if (basket != null) basket.SetActive(true);
             }
             else
             {
@@ -220,5 +226,9 @@ namespace IdleMart.AI
             _onDespawn?.Invoke(this);
             Destroy(gameObject);
         }
+
+#if UNITY_EDITOR
+        public void EditorSetup(GameObject basketObject) => basket = basketObject;
+#endif
     }
 }

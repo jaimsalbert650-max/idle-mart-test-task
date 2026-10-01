@@ -378,7 +378,13 @@ namespace IdleMart.EditorTools
         {
             var root = BuildCharacterBase("Customer", model, controller);
             AddAgent(root, 1.3f);
-            root.AddComponent<CustomerAI>();
+
+            var basket = (GameObject)PrefabUtility.InstantiatePrefab(Model("mini-market/shopping-basket"), root.transform);
+            basket.name = "Basket";
+            basket.transform.localPosition = new Vector3(0.2f, 0.12f, 0.08f);
+            basket.transform.localScale = Vector3.one * 0.7f;
+
+            root.AddComponent<CustomerAI>().EditorSetup(basket);
             return root;
         }
 

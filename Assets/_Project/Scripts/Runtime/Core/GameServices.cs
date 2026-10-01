@@ -20,6 +20,9 @@ namespace IdleMart.Core
         /// <summary>Raised whenever something the player can buy changes (built, upgraded, unlocked).</summary>
         public event Action StoreChanged;
 
+        /// <summary>Raised for every sale with the world position where it happened (for UI effects).</summary>
+        public event Action<UnityEngine.Vector3, long> SaleAt;
+
         public GameServices(GameConfig config, IClock clock)
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
@@ -35,6 +38,12 @@ namespace IdleMart.Core
             Wallet.Add(money);
             Income.Record(money);
             Progress.AddXp(xp);
+        }
+
+        public void RegisterSale(long money, int xp, UnityEngine.Vector3 worldPosition)
+        {
+            RegisterSale(money, xp);
+            SaleAt?.Invoke(worldPosition, money);
         }
 
         public void NotifyStoreChanged() => StoreChanged?.Invoke();

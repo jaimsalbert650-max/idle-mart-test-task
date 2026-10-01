@@ -12,16 +12,24 @@ namespace IdleMart.UI
         [SerializeField] private TMP_Text income;
         [SerializeField] private TMP_Text level;
         [SerializeField] private Image xpFill;
+        [Tooltip("Coin image flown from the checkout to the money counter on every sale.")]
+        [SerializeField] private Image coinTemplate;
+
+        private const int MaxFlyingCoins = 12;
 
         private GameServices _services;
         private double _shownMoney;
         private float _incomeTimer;
+        private int _flyingCoins;
+        private Camera _camera;
 
         public void Init(GameServices services)
         {
             _services = services;
             _shownMoney = services.Wallet.Money;
             services.Wallet.Changed += OnMoneyChanged;
+            services.SaleAt += FlyCoin;
+            if (coinTemplate != null) coinTemplate.gameObject.SetActive(false);
             services.Progress.XpChanged += _ => RefreshLevel();
             services.Progress.LevelUp += _ => UiTween.Punch(level.transform, 0.3f, 0.4f);
             RefreshLevel();
@@ -30,7 +38,39 @@ namespace IdleMart.UI
 
         private void OnDestroy()
         {
-            if (_services != null) _services.Wallet.Changed -= OnMoneyChanged;
+            if (_services == null) return;
+            _services.Wallet.Changed -= OnMoneyChanged;
+            _services.SaleAt -= FlyCoin;
+        }
+
+        /// <summary>A coin pops out of the checkout and arcs into the money counter.</summary>
+        private void FlyCoin(Vector3 worldPosition, long amount)
+        {
+            if (coinTemplate == null || _flyingCoins >= MaxFlyingCoins) return;
+            if (_camera == null) _camera = Camera.main;
+            if (_camera == null) return;
+
+            var start = _camera.WorldToScreenPoint(worldPosition);
+            if (start.z < 0f) return;
+
+            var coin = Instantiate(coinTemplate, coinTemplate.transform.parent);
+            coin.gameObject.SetActive(true);
+            _flyingCoins++;
+
+            var from = (Vector3)(Vector2)start;
+            var to = money.rectTransform.position;
+            var control = (from + to) * 0.5f + Vector3.up * 220f;
+            UiTween.Play(coin.gameObject, 0.7f, t =>
+            {
+                var e = UiTween.EaseOutCubic(t);
+                // Quadratic bezier arc.
+                coin.transform.position = Vector3.Lerp(Vector3.Lerp(from, control, e), Vector3.Lerp(control, to, e), e);
+                coin.transform.localScale = Vector3.one * Mathf.Lerp(1.3f, 0.7f, e);
+            }, () =>
+            {
+                _flyingCoins--;
+                Destroy(coin.gameObject);
+            });
         }
 
         private void OnMoneyChanged(long value)
@@ -69,8 +109,9 @@ namespace IdleMart.UI
         }
 
 #if UNITY_EDITOR
-        public void EditorSetup(TMP_Text moneyText, TMP_Text incomeText, TMP_Text levelText, Image xp)
+        public void EditorSetup(TMP_Text moneyText, TMP_Text incomeText, TMP_Text levelText, Image xp, Image coin)
         {
+            coinTemplate = coin;
             money = moneyText;
             income = incomeText;
             level = levelText;

@@ -486,7 +486,6 @@ namespace IdleMart.EditorTools
             xpFill.fillMethod = Image.FillMethod.Horizontal;
 
             var hud = canvas.gameObject.AddComponent<HudView>();
-            hud.EditorSetup(money, income, level, xpFill);
 
             // Top-right buttons.
             var pauseButton = TextButton(canvas.transform, "PauseButton", "", Neutral, new Vector2(96f, 96f), 40f);
@@ -561,6 +560,16 @@ namespace IdleMart.EditorTools
             var collect = TextButton(offlineContent, "Collect", "Collect", Accent, new Vector2(0f, 90f));
 
             var settingsPanel = InstantiateSettings(canvas.transform);
+
+            // Flying coin template: created last so coins draw above every panel.
+            var coin = Rect(canvas.transform, "CoinTemplate").gameObject.AddComponent<Image>();
+            coin.sprite = KnobSprite;
+            coin.color = Gold;
+            coin.raycastTarget = false;
+            coin.rectTransform.sizeDelta = new Vector2(46f, 46f);
+            var coinLabel = Label(coin.transform, "Label", "$", 30f, new Color(0.55f, 0.38f, 0.05f), TextAlignmentOptions.Center, true);
+            coinLabel.rectTransform.Stretch();
+            hud.EditorSetup(money, income, level, xpFill, coin);
 
             var ui = canvas.gameObject.AddComponent<GameUI>();
             ui.EditorSetup(game, hud, contextPanel, staffPanel, settingsPanel, toast, staffButton, pauseButton,
