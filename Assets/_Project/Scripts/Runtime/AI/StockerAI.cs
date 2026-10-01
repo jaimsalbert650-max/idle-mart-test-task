@@ -60,6 +60,13 @@ namespace IdleMart.AI
             }
             else _walkTimer = 0f;
 
+            // The target shelf was sold: drop the job.
+            if (_state != State.Idle && _shelf == null)
+            {
+                SetCarrying(false);
+                _state = State.Idle;
+            }
+
             switch (_state)
             {
                 case State.Idle:

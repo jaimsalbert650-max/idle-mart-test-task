@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: GameConfig
   m_EditorClassIdentifier: IdleMart.Runtime::IdleMart.Configs.GameConfig
   startMoney: 150
-  levelThresholds: 1e0000005a000000c80000007c0100008a020000e8030000dc05000098080000800c0000
-  baseCustomersPerMinute: 8
-  customersPerMinutePerLevel: 1.5
+  levelThresholds: 140000003c00000082000000f0000000900100006c020000840300001405000008070000
+  baseCustomersPerMinute: 12
+  customersPerMinutePerLevel: 3
   maxCustomers: 25
-  maxItemsPerCustomer: 2
+  maxItemsPerCustomer: 3
   stockerBaseHireCost: 120
   stockerHireCostGrowth: 1.8
   baseStockers: 1

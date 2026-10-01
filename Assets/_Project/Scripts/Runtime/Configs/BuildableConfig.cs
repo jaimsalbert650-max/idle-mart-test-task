@@ -36,7 +36,7 @@ namespace IdleMart.Configs
         [Min(1)] public int baseCapacity = 6;
         [Min(0)] public int capacityPerLevel = 2;
         [Tooltip("Price multiplier added per level above 1 (0.15 = +15% per level).")]
-        [Min(0f)] public float pricePerLevel = 0.15f;
+        [Min(0f)] public float pricePerLevel = 0.25f;
 
         [Header("Checkout")]
         [Tooltip("Seconds a cashier needs per customer at level 1.")]

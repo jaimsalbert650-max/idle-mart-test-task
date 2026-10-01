@@ -15,5 +15,5 @@ MonoBehaviour:
   id: fruits
   displayName: Fruits
   color: {r: 1, g: 0.55, b: 0.2, a: 1}
-  basePrice: 5
+  basePrice: 6
   xpPerSale: 1

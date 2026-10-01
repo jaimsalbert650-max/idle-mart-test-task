@@ -13,14 +13,14 @@ namespace IdleMart.Configs
 
         [Header("Progression")]
         [Tooltip("Total XP needed to reach level 2, 3, 4...")]
-        public int[] levelThresholds = { 30, 90, 200, 380, 650, 1000, 1500, 2200, 3200 };
+        public int[] levelThresholds = { 20, 60, 130, 240, 400, 620, 900, 1300, 1800 };
 
         [Header("Customers")]
-        [Min(0.1f)] public float baseCustomersPerMinute = 8f;
+        [Min(0.1f)] public float baseCustomersPerMinute = 12f;
         [Tooltip("Customers per minute added per store level above 1.")]
-        [Min(0f)] public float customersPerMinutePerLevel = 1.5f;
+        [Min(0f)] public float customersPerMinutePerLevel = 3f;
         [Min(1)] public int maxCustomers = 25;
-        [Min(1)] public int maxItemsPerCustomer = 2;
+        [Min(1)] public int maxItemsPerCustomer = 3;
 
         [Header("Staff")]
         [Min(0)] public long stockerBaseHireCost = 120;

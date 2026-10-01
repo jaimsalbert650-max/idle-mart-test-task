@@ -15,5 +15,5 @@ MonoBehaviour:
   id: snacks
   displayName: Snacks
   color: {r: 1, g: 0.8, b: 0.2, a: 1}
-  basePrice: 16
+  basePrice: 18
   xpPerSale: 2

@@ -97,6 +97,12 @@ namespace IdleMart.AI
                     if (_timer <= 0f) DecideNext();
                     break;
 
+                case State.WalkingToShelf when _shelf == null:
+                case State.PickingUp when _shelf == null:
+                    // The shelf was sold on the way: pick another one.
+                    EnterDeciding(0.1f);
+                    break;
+
                 case State.WalkingToShelf:
                     if (_motor.HasArrived)
                     {

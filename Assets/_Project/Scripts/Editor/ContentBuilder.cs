@@ -540,12 +540,12 @@ namespace IdleMart.EditorTools
 
         private static void BuildConfigs()
         {
-            var fruits = Product("fruits", "Fruits", new Color(1f, 0.55f, 0.2f), 5, 1);
-            var bread = Product("bread", "Bread", new Color(0.85f, 0.65f, 0.35f), 8, 1);
-            var groceries = Product("groceries", "Groceries", new Color(0.4f, 0.7f, 1f), 12, 2);
-            var snacks = Product("snacks", "Snacks", new Color(1f, 0.8f, 0.2f), 16, 2);
-            var drinks = Product("drinks", "Drinks", new Color(0.3f, 0.85f, 0.85f), 22, 3);
-            var frozen = Product("frozen", "Frozen food", new Color(0.7f, 0.85f, 1f), 30, 4);
+            var fruits = Product("fruits", "Fruits", new Color(1f, 0.55f, 0.2f), 6, 1);
+            var bread = Product("bread", "Bread", new Color(0.85f, 0.65f, 0.35f), 9, 1);
+            var groceries = Product("groceries", "Groceries", new Color(0.4f, 0.7f, 1f), 14, 2);
+            var snacks = Product("snacks", "Snacks", new Color(1f, 0.8f, 0.2f), 18, 2);
+            var drinks = Product("drinks", "Drinks", new Color(0.3f, 0.85f, 0.85f), 25, 3);
+            var frozen = Product("frozen", "Frozen food", new Color(0.7f, 0.85f, 1f), 35, 4);
 
             var buildables = new List<BuildableConfig>
             {
@@ -578,7 +578,7 @@ namespace IdleMart.EditorTools
                 e.description = "More shoppers can come by car.";
                 e.cost = 400;
                 e.requiredLevel = 2;
-                e.extraCustomersPerMinute = 4f;
+                e.extraCustomersPerMinute = 6f;
             });
             var hall2 = GetOrCreate<ExpansionConfig>($"{Configs}/Expansions/hall2.asset", e =>
             {
@@ -587,7 +587,7 @@ namespace IdleMart.EditorTools
                 e.description = "Room for six more shelves and a checkout.";
                 e.cost = 1500;
                 e.requiredLevel = 4;
-                e.extraCustomersPerMinute = 3f;
+                e.extraCustomersPerMinute = 5f;
             });
 
             var game = GetOrCreate<GameConfig>($"{Configs}/GameConfig.asset", _ => { });

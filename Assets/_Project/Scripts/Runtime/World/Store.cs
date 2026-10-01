@@ -75,6 +75,22 @@ namespace IdleMart.World
             return PurchaseResult.Ok;
         }
 
+        /// <summary>
+        /// Sells a shelf so its slot can hold another product. Checkouts are not sellable:
+        /// they own a customer queue.
+        /// </summary>
+        public bool TrySell(Shelf shelf)
+        {
+            if (shelf == null) return false;
+
+            var slot = shelf.Slot;
+            _services.Wallet.Add(shelf.SellValue);
+            WorldFx.ShowPuff(slot.transform.position);
+            slot.Clear();
+            _services.NotifyStoreChanged();
+            return true;
+        }
+
         public PurchaseResult CanUnlock(ExpansionZone zone)
         {
             if (zone.IsUnlocked) return PurchaseResult.NotAllowed;

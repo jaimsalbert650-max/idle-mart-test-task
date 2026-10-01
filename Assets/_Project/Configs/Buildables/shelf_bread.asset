@@ -23,7 +23,7 @@ MonoBehaviour:
   product: {fileID: 11400000, guid: 1890e7ecf271b2a4da1c5d726813f039, type: 2}
   baseCapacity: 6
   capacityPerLevel: 2
-  pricePerLevel: 0.15
+  pricePerLevel: 0.25
   baseServiceTime: 2.5
   serviceTimePerLevel: 0.35
   cashierHireCost: 150

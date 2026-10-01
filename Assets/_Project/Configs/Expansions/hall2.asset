@@ -17,4 +17,4 @@ MonoBehaviour:
   description: Room for six more shelves and a checkout.
   cost: 1500
   requiredLevel: 4
-  extraCustomersPerMinute: 3
+  extraCustomersPerMinute: 5

@@ -53,6 +53,15 @@ namespace IdleMart.World
             return Built;
         }
 
+        /// <summary>Removes the built object (used when selling it).</summary>
+        public void Clear()
+        {
+            if (Built == null) return;
+            Destroy(Built.gameObject);
+            Built = null;
+            RefreshMarker();
+        }
+
         public void OnClicked()
         {
         }

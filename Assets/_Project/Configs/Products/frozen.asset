@@ -15,5 +15,5 @@ MonoBehaviour:
   id: frozen
   displayName: Frozen food
   color: {r: 0.7, g: 0.85, b: 1, a: 1}
-  basePrice: 30
+  basePrice: 35
   xpPerSale: 4

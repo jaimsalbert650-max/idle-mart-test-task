@@ -17,4 +17,4 @@ MonoBehaviour:
   description: More shoppers can come by car.
   cost: 400
   requiredLevel: 2
-  extraCustomersPerMinute: 4
+  extraCustomersPerMinute: 6

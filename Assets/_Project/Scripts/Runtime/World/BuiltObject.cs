@@ -18,6 +18,17 @@ namespace IdleMart.World
         public bool IsMaxLevel => Level >= Config.maxLevel;
         public long NextUpgradeCost => Config.UpgradeCost(Level);
 
+        /// <summary>Half of everything invested (build + upgrades) is returned when sold.</summary>
+        public long SellValue
+        {
+            get
+            {
+                var invested = Config.buildCost;
+                for (var level = 1; level < Level; level++) invested += Config.UpgradeCost(level);
+                return invested / 2;
+            }
+        }
+
         /// <summary>Raised after an upgrade or any state change the UI should redraw.</summary>
         public event Action Changed;
 

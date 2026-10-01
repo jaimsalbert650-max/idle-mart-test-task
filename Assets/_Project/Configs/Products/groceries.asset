@@ -15,5 +15,5 @@ MonoBehaviour:
   id: groceries
   displayName: Groceries
   color: {r: 0.4, g: 0.7, b: 1, a: 1}
-  basePrice: 12
+  basePrice: 14
   xpPerSale: 2

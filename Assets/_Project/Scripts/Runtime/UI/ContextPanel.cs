@@ -141,6 +141,14 @@ namespace IdleMart.UI
                 shelf.OnClicked();
                 AudioService.Play(Sfx.Restock);
             });
+
+            AddOption("Sell shelf", "Frees the spot for another product", "+" + NumberFormat.Money(shelf.SellValue), true, () =>
+            {
+                var slot = shelf.Slot;
+                if (!_game.Store.TrySell(shelf)) return;
+                AudioService.Play(Sfx.Coin);
+                Select(slot);
+            });
         }
 
         private void ShowCheckout(Checkout checkout)
