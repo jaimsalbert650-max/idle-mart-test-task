@@ -24,14 +24,12 @@ namespace IdleMart.Progression
         {
             if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount));
             Xp += amount;
-            XpChanged?.Invoke(Xp);
 
-            var newLevel = _table.LevelFor(Xp);
-            while (Level < newLevel)
-            {
-                Level++;
-                LevelUp?.Invoke(Level);
-            }
+            // Update the level before any event, so XpChanged listeners (the HUD) never see a stale level.
+            var oldLevel = Level;
+            Level = Math.Max(Level, _table.LevelFor(Xp));
+            XpChanged?.Invoke(Xp);
+            for (var level = oldLevel + 1; level <= Level; level++) LevelUp?.Invoke(level);
         }
 
         /// <summary>Restores XP from a save without level-up events.</summary>

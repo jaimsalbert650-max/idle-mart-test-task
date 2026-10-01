@@ -1,7 +1,7 @@
 {
     "name": "IdleMart.Tests.PlayMode",
     "rootNamespace": "IdleMart.Tests",
-    "references": ["IdleMart.Runtime", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+    "references": ["IdleMart.Runtime", "Unity.InputSystem", "Unity.TextMeshPro", "UnityEngine.UI", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
     "overrideReferences": true,
     "precompiledReferences": ["nunit.framework.dll"],
     "autoReferenced": false,

@@ -33,7 +33,8 @@ namespace IdleMart.Tests
         public IEnumerator TearDown()
         {
             Time.timeScale = 1f;
-            yield return SceneManager.LoadSceneAsync(SceneLoader.GameScene); // Unload game objects cleanly.
+            // The menu has no GameBootstrap, so nothing can save over the restored file (e.g. on exiting play mode).
+            yield return SceneManager.LoadSceneAsync(SceneLoader.MainMenuScene);
             if (File.Exists(_backup)) File.Copy(_backup, GameBootstrap.SavePath, true);
             else if (File.Exists(GameBootstrap.SavePath)) File.Delete(GameBootstrap.SavePath);
             if (File.Exists(_backup)) File.Delete(_backup);

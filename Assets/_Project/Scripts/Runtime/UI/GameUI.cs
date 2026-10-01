@@ -39,6 +39,8 @@ namespace IdleMart.UI
         [SerializeField] private TMP_Text hintText;
 
         private float _hintTimer;
+        // Tracked separately from the panel: it stays active while fading out, which would swallow an Esc press.
+        private bool _paused;
 
         private void Start()
         {
@@ -75,7 +77,7 @@ namespace IdleMart.UI
         private void Update()
         {
             if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-                SetPaused(!pausePanel.activeSelf);
+                SetPaused(!_paused);
 
             _hintTimer -= Time.unscaledDeltaTime;
             if (_hintTimer <= 0f)
@@ -88,6 +90,7 @@ namespace IdleMart.UI
         private void SetPaused(bool paused)
         {
             AudioService.Play(Sfx.Click);
+            _paused = paused;
             Time.timeScale = paused ? 0f : 1f;
             if (paused) UiTween.Show(pausePanel);
             else
