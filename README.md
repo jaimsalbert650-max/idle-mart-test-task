@@ -59,7 +59,7 @@ Assets/_Project
 │  │  ├─ UI/           HUD, ContextPanel, StaffPanel, GameUI, MainMenu, UiTween (own tweener)
 │  │  └─ Settings/     SettingsService (PlayerPrefs), AudioService
 │  └─ Editor/      IdleMart.Editor assembly: content / scene / UI builders, music generator
-└─ Tests/EditMode/ IdleMart.Tests.EditMode — 51 NUnit tests
+└─ Tests/EditMode/ EditMode (55) + PlayMode (3) NUnit tests
 ```
 
 ### Architecture

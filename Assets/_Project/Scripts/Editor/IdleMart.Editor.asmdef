@@ -7,7 +7,9 @@
         "Unity.AI.Navigation.Editor",
         "Unity.TextMeshPro",
         "Unity.InputSystem",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "UnityEditor.TestRunner",
+        "UnityEngine.TestRunner"
     ],
     "includePlatforms": ["Editor"],
     "autoReferenced": false
