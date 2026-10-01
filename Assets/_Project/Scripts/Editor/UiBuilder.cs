@@ -569,6 +569,7 @@ namespace IdleMart.EditorTools
             coin.rectTransform.sizeDelta = new Vector2(46f, 46f);
             var coinLabel = Label(coin.transform, "Label", "$", 30f, new Color(0.55f, 0.38f, 0.05f), TextAlignmentOptions.Center, true);
             coinLabel.rectTransform.Stretch();
+            coin.gameObject.SetActive(false);
             hud.EditorSetup(money, income, level, xpFill, coin);
 
             var ui = canvas.gameObject.AddComponent<GameUI>();

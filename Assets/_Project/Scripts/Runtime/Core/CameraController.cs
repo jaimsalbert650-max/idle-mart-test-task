@@ -34,11 +34,15 @@ namespace IdleMart.Core
         /// <summary>True while the current press is a pan, so it must not count as a click.</summary>
         public bool IsDragging { get; private set; }
 
+        [Tooltip("Where the camera looks when the game starts (the first hall).")]
+        [SerializeField] private Vector3 startFocus = new Vector3(5.5f, 0f, 3f);
+        [SerializeField] private float startDistance = 14f;
+
         private void Awake()
         {
             if (targetCamera == null) targetCamera = Camera.main;
-            _focus = new Vector3((boundsMin.x + boundsMax.x) * 0.5f, 0f, (boundsMin.y + boundsMax.y) * 0.5f);
-            _distance = (minDistance + maxDistance) * 0.5f;
+            _focus = startFocus;
+            _distance = Mathf.Clamp(startDistance, minDistance, maxDistance);
             Apply();
         }
 

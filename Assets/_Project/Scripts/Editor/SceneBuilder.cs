@@ -224,6 +224,13 @@ namespace IdleMart.EditorTools
             Place("furniture-kit/pottedPlant", decor, new Vector3(6.6f, 0f, 0.5f));
             Place("mini-market/shopping-cart", decor, new Vector3(0.5f, 0f, 3f), 90f);
             Place("mini-market/shopping-cart", decor, new Vector3(0.5f, 0f, 3.6f), 90f);
+
+            // Back wall: decorative fridges (not buildable), leaving the aisle behind the shelves free.
+            foreach (var x in new[] { 3.5f, 4.5f, 5.5f, 6.5f, 7.5f, 8.5f })
+                Place("mini-market/freezers-standing", decor, new Vector3(x, 0f, 7.15f), 180f);
+            Place("mini-market/bottle-return", decor, new Vector3(9.5f, 0f, 7.6f), 180f);
+            Place("mini-market/shopping-basket", decor, new Vector3(3.6f, 0f, 0.6f), 20f);
+            Place("mini-market/shopping-basket", decor, new Vector3(3.8f, 0f, 0.75f), -15f);
             return storagePoint;
         }
 

@@ -10,7 +10,10 @@ namespace IdleMart.Core
         {
             Application.targetFrameRate = 60;
             SettingsService.ApplyAll();
-            SceneLoader.Load(SceneLoader.MainMenuScene);
+
+            // "-skipmenu" opens the game directly (handy for quick testing of a build).
+            var skipMenu = System.Array.IndexOf(System.Environment.GetCommandLineArgs(), "-skipmenu") >= 0;
+            SceneLoader.Load(skipMenu ? SceneLoader.GameScene : SceneLoader.MainMenuScene);
         }
     }
 }

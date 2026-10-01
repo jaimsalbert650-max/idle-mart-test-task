@@ -3,17 +3,23 @@
 A small 3D Idle Tycoon made as a test task for **Midnight.Works (Unity Developer)**.
 Build shelves and checkouts, serve customers, hire staff, expand the store and earn money even while the game is closed.
 
+![Gameplay](docs/images/gameplay.png)
+
 > **RU:** Тестовое задание — 3D Idle Tycoon «супермаркет». Unity 6000.3.17f1, URP, только нативные пакеты Unity, бесплатные ассеты Kenney (CC0). Ниже — как запустить, управление и устройство проекта.
 
 - **Unity:** 6000.3.17f1 (URP)
 - **Packages:** only native Unity packages — uGUI + TextMeshPro, AI Navigation, Input System, Test Framework. No Zenject, DOTween or other third-party code.
-- **Art & sounds:** [Kenney](https://kenney.nl) Mini Market, Mini Characters, Food Kit, Furniture Kit, Interface Sounds, Music Jingles (all CC0). Background music is synthesised by the project itself (`Idle Mart → Generate Music Loop`).
+- **Art & sounds:** [Kenney](https://kenney.nl) Mini Market, Mini Characters, Food Kit, Furniture Kit, Car Kit, Nature Kit, UI Pack, Game Icons, Kenney Fonts, Interface Sounds, Music Jingles (all CC0). Background music is synthesised by the project itself (`Idle Mart → Generate Music Loop`).
 
 ## How to run
 
 1. Open the project in Unity **6000.3.17f1**.
 2. Open `Assets/_Project/Scenes/Boot.unity` and press **Play** (Boot → loading screen → main menu → game).
    The Game scene can also be played directly for quick testing.
+
+A Windows build can be made with `Idle Mart → Build Windows Player` (→ `Builds/IdleMart/IdleMart.exe`; the `-skipmenu` argument opens the game directly).
+
+![Main menu](docs/images/menu.png)
 
 ## Controls
 
@@ -36,6 +42,7 @@ Build shelves and checkouts, serve customers, hire staff, expand the store and e
 - **Progression:** store level from XP. Levels unlock products, expansions, more staff and bring more customers.
 - **Offline income:** on return, the game pays 50% of your recent income rate for the time away (capped at 2 h) and shows a *Welcome back* popup.
 - **Extra systems:** ad campaigns (×2 customers for 60 s), customer speech bubbles when a product is sold out ("No bread!").
+- **Feedback:** coins fly from the checkout into the money counter, customers carry baskets, objects under the cursor are highlighted, build puffs, sounds and music.
 - **Save:** automatic every 30 s, on pause, on quit and when returning to the menu.
 
 ## Project structure
