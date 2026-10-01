@@ -8,6 +8,9 @@ namespace IdleMart.World
     /// <summary>Base for everything the player builds in a <see cref="BuildSlot"/>. Handles levels and upgrades.</summary>
     public abstract class BuiltObject : MonoBehaviour, IClickable
     {
+        [Tooltip("Optional world label showing the level (hidden at level 1).")]
+        [SerializeField] private TMPro.TMP_Text levelBadge;
+
         protected GameServices Services { get; private set; }
         protected Store Store { get; private set; }
 
@@ -40,7 +43,19 @@ namespace IdleMart.World
             Slot = slot;
             Level = Mathf.Clamp(level, 1, config.maxLevel);
             OnInit();
+            RefreshBadge();
         }
+
+        private void RefreshBadge()
+        {
+            if (levelBadge == null) return;
+            levelBadge.gameObject.SetActive(Level > 1);
+            levelBadge.text = IsMaxLevel ? "MAX" : $"Lv {Level}";
+        }
+
+#if UNITY_EDITOR
+        public void EditorSetBadge(TMPro.TMP_Text badge) => levelBadge = badge;
+#endif
 
         /// <summary>Pays for and applies the next level.</summary>
         public bool TryUpgrade()
@@ -49,6 +64,7 @@ namespace IdleMart.World
 
             Level++;
             OnLevelChanged();
+            RefreshBadge();
             RaiseChanged();
             Services.NotifyStoreChanged();
             return true;
