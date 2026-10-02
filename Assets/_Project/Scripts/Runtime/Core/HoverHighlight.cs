@@ -43,11 +43,11 @@ namespace IdleMart.Core
 
         private Transform FindTarget()
         {
-            var mouse = Mouse.current;
-            if (mouse == null || targetCamera == null || Time.timeScale == 0f) return null;
+            var pointer = Pointer.current;
+            if (pointer == null || targetCamera == null || Time.timeScale == 0f) return null;
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return null;
 
-            var ray = targetCamera.ScreenPointToRay(mouse.position.ReadValue());
+            var ray = targetCamera.ScreenPointToRay(pointer.position.ReadValue());
             if (!Physics.Raycast(ray, out var hit, 200f, ~0, QueryTriggerInteraction.Collide)) return null;
 
             var clickable = hit.collider.GetComponentInParent<IClickable>();

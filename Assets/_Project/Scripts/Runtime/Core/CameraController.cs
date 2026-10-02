@@ -61,11 +61,9 @@ namespace IdleMart.Core
             var keyboard = Keyboard.current;
 
             if (keyboard != null) HandleKeyboard(keyboard);
-            if (mouse != null)
-            {
-                HandleZoom(mouse);
-                HandleDrag(mouse);
-            }
+            if (mouse != null) HandleZoom(mouse);
+            // Dragging works with any pointer: mouse, pen or a finger on a touchscreen.
+            if (Pointer.current != null) HandleDrag(Pointer.current);
 
             Apply();
         }
@@ -93,11 +91,11 @@ namespace IdleMart.Core
                 _distance = Mathf.Clamp(_distance - scroll * zoomSpeed * _distance, minDistance, maxDistance);
         }
 
-        private void HandleDrag(Mouse mouse)
+        private void HandleDrag(Pointer pointer)
         {
-            var position = mouse.position.ReadValue();
+            var position = pointer.position.ReadValue();
 
-            if (mouse.leftButton.wasPressedThisFrame)
+            if (pointer.press.wasPressedThisFrame)
             {
                 _pressPosition = position;
                 _pressStartedOverUi = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
@@ -105,7 +103,7 @@ namespace IdleMart.Core
                 GroundPoint(position, out _dragWorldStart);
             }
 
-            if (mouse.leftButton.isPressed && !_pressStartedOverUi)
+            if (pointer.press.isPressed && !_pressStartedOverUi)
             {
                 if (!IsDragging && (position - _pressPosition).sqrMagnitude > dragThreshold * dragThreshold)
                     IsDragging = true;
@@ -120,7 +118,7 @@ namespace IdleMart.Core
             }
 
             // IsDragging stays true during the release frame so ClickInput can ignore it.
-            if (!mouse.leftButton.isPressed && !mouse.leftButton.wasReleasedThisFrame) IsDragging = false;
+            if (!pointer.press.isPressed && !pointer.press.wasReleasedThisFrame) IsDragging = false;
         }
 
         private bool GroundPoint(Vector2 screen, out Vector3 point)
